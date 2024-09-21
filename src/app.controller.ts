@@ -5,7 +5,7 @@ import { diskStorage } from 'multer';
 
 @Controller()
 export class AppController {
-  constructor(private readonly appService: AppService) {}
+  constructor(private readonly appService: AppService) { }
 
   @Get()
   getHello(): string {
@@ -23,20 +23,40 @@ export class AppController {
   }))
   uploadFile(@UploadedFile(
     new ParseFilePipeBuilder()
-    .addFileTypeValidator({
-      fileType: 'png'
-    })
-    .addMaxSizeValidator({
-      maxSize: 1000
-    })
-    .build({
-      errorHttpStatusCode: HttpStatus.UNPROCESSABLE_ENTITY
-    })
-  ) 
-  file: Express.Multer.File){
+      .addFileTypeValidator({
+        fileType: 'png'
+      })
+      .addMaxSizeValidator({
+        maxSize: 1000
+      })
+      .build({
+        errorHttpStatusCode: HttpStatus.UNPROCESSABLE_ENTITY
+      })
+  )
+  file: Express.Multer.File) {
     console.log(file)
     return {
       message: 'file uploaded successfully'
     }
   }
+
+  // @UseInterceptors(
+  //   FileInterceptor('file', {
+  //     storage: diskStorage({
+  //       destination: './files',
+  //       filename: (req, file, cb) => {
+  //         const fileNameSplit = file.originalname.split('.');
+  //         const fileExt = fileNameSplit[fileNameSplit.length - 1];
+  //         cb(null, `${Date.now()}.${fileExt}`);
+  //       },
+  //     }),
+  //   }),
+  // )
+  // @Post("/upload")
+  // create(
+  //   @UploadedFile() file: Express.Multer.File,
+  // ) {
+  //   console.log(file)
+  // }
+
 }
